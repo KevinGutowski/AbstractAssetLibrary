@@ -1,0 +1,63 @@
+body {
+  background-color: rgb(247,247,247);
+}
+
+.App {
+  max-width: 1200px;
+  margin: 80px auto 0;
+  padding: 24px;
+}
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+}
+
+.card {
+  background-color: white;
+  height: 100px;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1),0 0 1px rgba(0,0,0,0.15);
+  transition: .2s;
+  cursor: pointer;
+  display: flex;
+  text-decoration: none;
+  color: black;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05),0 2px 4px rgba(0,0,0,0.15);
+}
+
+.vLine {
+  height: 100%;
+  width: 4px;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+h4 {
+  margin: 0;
+}
+
+.projectProperties {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.updatedAt {
+  margin-top: 4px;
+  font-size: 14px;
+  color: rgb(80,80,80);
+}
+
+.createdByUserImage {
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+}
+

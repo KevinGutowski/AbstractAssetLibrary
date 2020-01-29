@@ -1,0 +1,25 @@
+.imgContainer {
+    background-image: url('data:image/svg+xml;utf8,<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect fill="%23EDEEEF" x="0" y="0" width="8" height="8"></rect><rect fill="%23EDEEEF" x="8" y="8" width="8" height="8"></rect></g></svg>');
+    background-size: 16px 16px;
+    background-position: 0 0,8px 8px;
+    background-color: white;
+    border: 1px solid rgba(0,0,0,.10);
+    padding: 8px;
+    border-radius: 4px;
+    width: 400px;
+    height: 400px;
+    text-align: center;
+    line-height: 400px;
+}
+
+.resizeFitCenter {
+    max-width:100%;
+    max-height:100%;
+    vertical-align: middle;
+}
+
+.assetCollectionForFile {
+    display: grid;
+    grid-template-columns: repeat(3, 400px);
+    grid-gap: 24px;
+}
