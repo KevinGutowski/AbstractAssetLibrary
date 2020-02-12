@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Moment from 'moment';
 import './App.css';
 
-// import Home from './Home';
 import Project from './Project';
 
 const Abstract = require('abstract-sdk');
@@ -16,6 +15,7 @@ const abstract = new Abstract.Client({
 });
 
 let orgID = "64a05564-1b30-48a2-8388-445a15026e52"
+
 
 class App extends Component {
   constructor(props) {

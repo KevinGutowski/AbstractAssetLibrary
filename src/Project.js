@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
 import './Project.css';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
+
+const Abstract = require('abstract-sdk');
+
+const token = process.env.REACT_APP_ABSTRACT_TOKEN
+
+const abstract = new Abstract.Client({
+  accessToken: token,
+  previewUrl: "https://cors-anywhere.herokuapp.com/previews.goabstract.com"
+});
+
 
 class Project extends Component {
   constructor(props) {
@@ -51,14 +63,34 @@ class Project extends Component {
     for (let i = 0; i < assetCollection.length; i++) {
       let assetObject = assetCollection[i]
       for (let j = 0; j < assetObject.assets.length; j++) {
-        let previewURL = await abstract.previews.url({
-          projectId: assetObject.assets[j].projectId,
-          branchId: 'master',
-          fileId: assetObject.assets[j].fileId,
-          layerId: assetObject.assets[j].layerId,
-          sha: "latest"
-        })
-        assetCollection[i].assets[j].previewURL = previewURL
+        let layerId = assetObject.assets[j].layerId
+        let nestedLayerId = assetObject.assets[j].nestedLayerId
+
+        if (layerId === nestedLayerId) {
+          // normal layer
+          let previewURL = await abstract.previews.url({
+            projectId: assetObject.assets[j].projectId,
+            branchId: "master",
+            fileId: assetObject.assets[j].fileId,
+            layerId: layerId,
+            nestedLayerId: nestedLayerId,
+            sha: "latest"
+          })
+          assetCollection[i].assets[j].previewURL = previewURL
+        } else {
+          // nested layer objects
+          const arrayBuffer = await abstract.assets.raw({
+            assetId: assetObject.assets[j].id,
+            projectId: assetObject.assets[j].projectId,
+          }, {
+            disableWrite: true
+          });
+          var blob = new Blob( [ arrayBuffer ], { type: "image/png" } )
+          var urlCreator = window.URL || window.webkitURL
+          var imageUrl = urlCreator.createObjectURL( blob )
+          assetCollection[i].assets[j].previewURL = imageUrl
+        }
+
 
         this.setState({
           assets: assetCollection,
@@ -79,6 +111,14 @@ class Project extends Component {
       )
     }
 
+    async function downloadAsset(asset) {
+      console.log(asset)
+      abstract.assets.raw({
+        assetId: asset.id,
+        projectId: asset.projectId
+      });
+    }
+
     const names = assets.map(asset => {
       if (asset.assets.length === 0) {
         return <li key={asset.file.id}>{asset.file.name}</li>
@@ -88,11 +128,9 @@ class Project extends Component {
             <div className="imgContainer">
               <img className="resizeFitCenter" src={asset.previewURL} alt=""/>
             </div>
+            <button className="downloadButton" onClick={() => downloadAsset(asset)}><FontAwesomeIcon icon={faDownload}/> Download</button>
             <div className="info">
-              <div>layerName: {asset.layerName}</div>
-              <div>layerId: {asset.layerId}</div>
-              <div>nestedLayerId: {asset.nestedLayerId}</div>
-              <div>fileFormat: {asset.fileFormat} @ {asset.formatName}</div>
+              <div>{asset.layerName}</div>
             </div>
           </div>
         ))

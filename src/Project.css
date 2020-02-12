@@ -23,3 +23,13 @@
     grid-template-columns: repeat(3, 400px);
     grid-gap: 24px;
 }
+
+.asset {
+    position: relative;
+}
+
+.downloadButton {
+    position: absolute;
+    bottom: 32px;
+    right: 0;
+}
