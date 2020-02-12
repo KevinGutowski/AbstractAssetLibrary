@@ -5,14 +5,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
 
 const Abstract = require('abstract-sdk');
-
 const token = process.env.REACT_APP_ABSTRACT_TOKEN
-
 const abstract = new Abstract.Client({
   accessToken: token,
   previewUrl: "https://cors-anywhere.herokuapp.com/previews.goabstract.com"
 });
 
+const BlobTypeMap = {
+  pdf: 'application/pdf',
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  tiff: 'image/tiff',
+  tif: 'image/tiff',
+  webp: 'image/webp',
+  svg: 'image/svg+xml',
+  eps: 'application/postscript'
+}
 
 class Project extends Component {
   constructor(props) {
@@ -111,12 +120,26 @@ class Project extends Component {
       )
     }
 
-    async function downloadAsset(asset) {
-      console.log(asset)
-      abstract.assets.raw({
+    function downloadAsset(asset) {
+      let arrayBuffer = abstract.assets.raw({
         assetId: asset.id,
         projectId: asset.projectId
+      }, {
+        disableWrite: true
       });
+      arrayBuffer.then(
+        function(result) {
+          var blob = new Blob( [ result ], { type: BlobTypeMap[asset.fileFormat] } )
+          var urlCreator = window.URL || window.webkitURL
+          var imageUrl = urlCreator.createObjectURL( blob )
+          const link = document.createElement('a')
+          link.href = imageUrl
+          link.setAttribute('download',asset.layerName)
+          document.body.appendChild(link)
+          link.click()
+          link.parentNode.removeChild(link)
+        }
+      )
     }
 
     const names = assets.map(asset => {
